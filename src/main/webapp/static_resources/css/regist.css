@@ -1,0 +1,60 @@
+/* 重定义浏览器默认样式
+	Name:			reset style
+	Level:			Global
+	Explain:		重定义浏览器默认样式
+	Last Modify:	muyushan
+*/
+*{word-wrap:break-word;}
+html,body,h1,h2,h3,h4,h5,h6,hr,p,iframe,dl,dt,dd,ul,ol,li,pre,form,button,input,textarea,th,td,fieldset{margin:0;padding:0}
+ #regist_body{
+ margin-top:200px;
+ margin-left:35%;
+ }
+ #regist_body .regist_row{
+}
+.valid_pass{
+	border-color:green;
+}
+.valid_error{
+	border-color:red;
+}
+.valid_tipspan{
+	padding-left:25px;
+	margin-left:5px;
+	
+}
+.valid_error_tip{
+	vertical-align:middle;
+	line-height:20px;
+	font-size: 13px;
+	display:inline-block;
+	
+	background: url("../images/icon_error_s.png") no-repeat 0 center; 
+}
+
+input {
+	border:3px solid transparent;
+	width: 400px;
+	height: 40px;
+	padding: 10px 0px 10px 10px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 15px;
+	margin-bottom:20px;
+	background: #FC9;
+	font-size: 2em;
+}
+button {
+	width: 412px;
+	border:3px solid transparent;
+	height: 40px;
+	padding: 0px 10px 0px 10px;
+	cursor: pointer;
+	border:none;
+	background-color:#FFBA00;
+	color:#282828;
+	font-size: 2em;
+}
+button:hover,button:focus{
+	background-color:#ffa800;
+}
