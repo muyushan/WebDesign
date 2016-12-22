@@ -36,6 +36,7 @@ $(document).ready(function(){
 		var reg_email = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
 		var reg_phone = /^1\d{10}$/;
 		                if (reg_email.test(email_phone)||reg_phone.test(email_phone)) {
+		                	email_phoneValidation(email_phone);
 		                	$("#email_phone").removeClass("valid_error");
 		                	$("#email_phone").addClass("valid_pass");
 		                	$("#email_phone").next("span").removeClass("valid_error_tip");
@@ -44,9 +45,31 @@ $(document).ready(function(){
 		                	$("#email_phone").removeClass("valid_pass");
 		                	$("#email_phone").addClass("valid_error");
 		                	$("#email_phone").next("span").addClass("valid_error_tip");
-		                	$("#email_phone").next("span").text("你确定你输入的内容正确？");
+		                	$("#email_phone").next("span").text("请输入正确的邮箱或手机号码");
 		                }
 	});
+	
+	function  email_phoneValidation(email_phone){
+		var email_phone=$("#email_phone").val();
+		$.ajax({
+			url:email_phone+'/validate',
+			type:'GET',
+			success:function(data){
+				if(eval("("+data+")")){
+					$("#email_phone").removeClass("valid_pass");
+	            	$("#email_phone").addClass("valid_error");
+	            	$("#email_phone").next("span").addClass("valid_error_tip");
+	            	$("#email_phone").next("span").text("该邮箱或手机已经被注册过了！");
+				}else{
+					$("#email_phone").removeClass("valid_error");
+                	$("#email_phone").addClass("valid_pass");
+                	$("#email_phone").next("span").removeClass("valid_error_tip");
+                	$("#email_phone").next("span").text("");
+				}
+				
+			}
+		});
+	}
 	// 密码验证
 	$("#password").blur(function(){
 		var reg_pass=/(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,30}/;

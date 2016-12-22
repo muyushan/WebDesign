@@ -5,12 +5,38 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserRegistInfo {
  private  String email_phone;
- private  String password;
+ private  String password; 
  private  String confirm_password;
+ private  UserIdType userIdType;
+ private  int statusCode;
+ private  String VerificationCode;
+public int getStatusCode() {
+	return statusCode;
+}
+public void setStatusCode(int statusCode) {
+	this.statusCode = statusCode;
+}
+public String getVerificationCode() {
+	return VerificationCode;
+}
+public void setVerificationCode(String verificationCode) {
+	VerificationCode = verificationCode;
+}
+public UserIdType getUserIdType() {
+	return userIdType;
+}
+public void setUserIdType(String userIdType) {
+	this.userIdType = UserIdType.valueOf(userIdType);
+}
 public String getEmail_phone() {
 	return email_phone;
 }
 public void setEmail_phone(String email_phone) {
+	if (email_phone.contains("@")) {
+		userIdType=UserIdType.EMAIL;
+	}else{
+		userIdType=UserIdType.PHONE;
+	}
 	this.email_phone = email_phone;
 }
 public String getPassword() {

@@ -20,6 +20,9 @@
 	<select id="getUserByEmail_phone" parameterType="String" resultType="com.sane.dh.model.user.UserRegistInfo">
 		Select *  FROM user WHERE email_phone=#{email_phone}
 	</select> 
+	<select id="email_phoneIsRegisted" parameterType="String" resultType="int">
+	select count(id) count from user where email_phone=#{email_phone}
+	</select>
 </mapper>
 
 

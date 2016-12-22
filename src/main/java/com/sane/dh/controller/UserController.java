@@ -18,25 +18,45 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
-	@RequestMapping(value={"/regist"},method=RequestMethod.GET)
-	public String showRegistPage(){
-		return"regist"; 
+
+	@RequestMapping(value = { "/regist" }, method = RequestMethod.GET)
+	public String showRegistPage() {
+		return "regist";
 	}
-	@RequestMapping(value={"/regist"},method=RequestMethod.POST)
+
+	@RequestMapping(value = { "/regist" }, method = RequestMethod.POST)
 	@ResponseBody
-	public String processRegist(@RequestBody UserRegistInfo registInfo){
+	public String processRegist(@RequestBody UserRegistInfo registInfo) {
 		if (userService.saveNewUser(registInfo)) {
-			return"success";
-		}else {
-			return"failer";
+			return "success";
+		} else {
+			return "failer";
 		}
 	}
-	@RequestMapping(value={"/{email_phone}"},method=RequestMethod.GET)
-	public String showProfile(@PathVariable(value="email_phone") String email_phone,Model model){
-		UserRegistInfo userRegistInfo=userService.getUserInfo(email_phone);
+
+	/**
+	 * 验证将要注册的电话或者email是没有人注册过的。
+	 * @return true:已经注册过了 <br>false：尚未注册过
+	 */
+	@RequestMapping(value="/{email_phone}/validate")
+	@ResponseBody
+	public String validateEmail_PhoneIsNew(@PathVariable String email_phone) {
+		Boolean isRegisted=userService.phone_emailIsRegisted(email_phone);
+		return isRegisted.toString(); 
+	}
+
+	/**
+	 * 个人信息页
+	 * 
+	 * @param email_phone
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = { "/{email_phone}" }, method = RequestMethod.GET)
+	public String showProfile(@PathVariable(value = "email_phone") String email_phone, Model model) {
+		UserRegistInfo userRegistInfo = userService.getUserInfo(email_phone);
 		model.addAttribute("userInfo", userRegistInfo);
-		return"userProfile"; 
+		return "userProfile";
 	}
 
 }
