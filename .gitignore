@@ -1,1 +1,7 @@
 /target/
+/target/
+.idea/
+WebDesign.iml
+src/main/webapp/WEB-INF/lib/
+/repository/
+/repository/

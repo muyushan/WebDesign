@@ -5,10 +5,9 @@ $(document).ready(function(){
 		var password=$("#password").val();
 		var confirm_password=$("#confirm_password").val();
 		var registInfo={};
-		registInfo['email_phone']=email_phone;
+		registInfo['username']=email_phone;
 		registInfo['password']=password;
-		registInfo['confirm_password']=confirm_password;
-		$.ajax({  
+		$.ajax({
             url : "regist",  
             type : "POST",  
             datatype:"json",
@@ -17,7 +16,7 @@ $(document).ready(function(){
             success:function(data){
             	if(data=='success'){
             		// 注册成功，跳转到个人详情信息页面
-            		var profileUrl=registInfo.email_phone+"/";
+            		var profileUrl=registInfo.username+"/";
             		location.href=profileUrl;
             	}else{
             		alert(data);

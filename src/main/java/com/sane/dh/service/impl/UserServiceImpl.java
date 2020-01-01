@@ -1,57 +1,61 @@
 package com.sane.dh.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
+import com.sane.dh.dao.UserMapper;
+import com.sane.dh.model.ImUserDetails;
+import com.sane.dh.model.User;
+import com.sane.dh.model.UserCriteria;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.sane.dh.dao.UserDao;
 import com.sane.dh.model.email.EmailBean;
-import com.sane.dh.model.user.UserIdType;
-import com.sane.dh.model.user.UserRegistInfo;
 import com.sane.dh.service.UserService;
+import org.springframework.util.CollectionUtils;
+
 @Service
 public class UserServiceImpl implements UserService{
 	Logger logger=Logger.getLogger(UserServiceImpl.class);
 	@Autowired
-	private UserDao userDao;
+	private UserMapper userDao;
 	@Value("${mail.from}")
 	private String fromEmailAddress;
-	@Autowired
-	@Qualifier(value="mailSender")
-	private JavaMailSender mailSendr;
 	@Override
-	public Boolean saveNewUser(UserRegistInfo userRegistInfo) {
-		boolean insertResult=userDao.addUser(userRegistInfo);
-		
-		if (insertResult) {
-			if (userRegistInfo.getUserIdType().equals(UserIdType.EMAIL)) {
-				EmailBean emailBean= new EmailBean();
-				emailBean.setEmailAddress(userRegistInfo.getEmail_phone());
-				emailBean.setSubject("WebDesign 注册验证");
-				emailBean.setText("请点击下面的链接进行用户验证");
-				sendValidEmail(emailBean);
-			}else if (UserIdType.PHONE.equals(userRegistInfo.getUserIdType())) {
-				//发送短信验证码
-			}
-			
+	public Boolean saveNewUser(User userRegistInfo) {
+		userRegistInfo.setCreatedate(new Date());
+		userRegistInfo.setEnable(Boolean.TRUE);
+		int count=userDao.insertSelective(userRegistInfo);
+		if (count==1) {
+			return  true;
 		}
-		return  insertResult;
+		return  false;
 	}
 	@Override
-	public UserRegistInfo getUserInfo(String email_phone) {
-		return userDao.getUserByEmail_phone(email_phone);
+	public User getUserInfo(String userName) {
+		UserCriteria userCriteria=new UserCriteria();
+		UserCriteria.Criteria userSql=userCriteria.createCriteria();
+		userSql.andUsernameEqualTo(userName);
+		List<User> userList=userDao.selectByExample(userCriteria);
+		if(!CollectionUtils.isEmpty(userList)){
+			return userList.get(0);
+
+		}else{
+			return  null;
+		}
 	}
 	@Override
-	public boolean phone_emailIsRegisted(String email_phone) {
-		return userDao.email_phoneIsRegisted(email_phone);
+	public boolean userNameIsRegisted(String userName) {
+		UserCriteria userCriteria=new UserCriteria();
+		UserCriteria.Criteria userSql=userCriteria.createCriteria();
+		userSql.andUsernameEqualTo(userName);
+		int count=userDao.countByExample(userCriteria);
+		return count>0;
 	}
 	
 	public boolean sendValidEmail(EmailBean emailBean){
@@ -62,7 +66,7 @@ public class UserServiceImpl implements UserService{
 		simpleMailMessage.setText(emailBean.getText());
 		simpleMailMessage.setSentDate(new Date());
 		try {
-			mailSendr.send(simpleMailMessage);
+//			mailSendr.send(simpleMailMessage);
 			logger.info(">>>>>>>>>>发送验证邮件成功：用户邮箱："+emailBean.getEmailAddress());
 			return true;
 		} catch (Exception e) {
@@ -72,4 +76,13 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user=this.getUserInfo(username);
+		UserDetails userDetails=null;
+		if(user!=null){
+			userDetails=new ImUserDetails(user);
+		}
+		return userDetails;
+	}
 }

@@ -1,10 +1,11 @@
 package com.sane.dh.service;
 
-import com.sane.dh.model.user.UserRegistInfo;
+import com.sane.dh.model.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
  
-	public Boolean saveNewUser(UserRegistInfo userRegistInfo);
-	public UserRegistInfo getUserInfo(String email_phone);
-	public boolean phone_emailIsRegisted(String email_phone); 
+	public Boolean saveNewUser(User userRegistInfo);
+	public User getUserInfo(String userName);
+	public boolean userNameIsRegisted(String userName);
 }

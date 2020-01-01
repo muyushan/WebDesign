@@ -9,6 +9,11 @@
 <title>WebDesign--设计师的充电站</title>
 </head>
 <body>
-
+登录页面
+<form method="post">
+    <input type="text" name="username">
+    <input type="password" name="password">
+    <input type="submit">
+</form>
 </body>
 </html>

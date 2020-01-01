@@ -1,0 +1,14 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://code.alibabatech.com/schema/dubbo
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+<!--	<dubbo:consumer group=""></dubbo:consumer>-->
+	<dubbo:application name="WebDesign-Consumer"></dubbo:application>
+	<dubbo:registry address="multicast://224.8.8.8:1234"></dubbo:registry>
+	<dubbo:protocol name="dubbo" port="20880"></dubbo:protocol>
+	<dubbo:reference interface="com.sane.dh.dubbo.service.DubboService" id="dubboService"></dubbo:reference>
+
+
+</beans>

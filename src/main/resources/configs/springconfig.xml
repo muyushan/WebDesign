@@ -30,13 +30,13 @@
         <property name="fileEncoding" value="UTF-8"></property>
         <property name="locations">  
             <list>  
-                <value>classpath:com/sane/dh/configs/db.properties</value>  
-                <value>classpath:com/sane/dh/configs/mail-sender.properties</value>  
-            </list>  
+                <value>classpath:configs/db.properties</value>
+                <value>classpath:configs/mail-sender.properties</value>
+            </list>
         </property>  
     </bean>  
 	<bean id="dataSource"
-		class="org.apache.commons.dbcp.BasicDataSource">
+		class="com.alibaba.druid.pool.DruidDataSource">
 		<property name="driverClassName" value="${jdbc.driverClassName}"></property>
 		<property name="url" value="${jdbc.url}"></property>
 		<property name="username" value="${jdbc.username}"></property>
@@ -45,41 +45,38 @@
 		<property name="initialSize" value="${jdbc.maxActive}"></property>
 	</bean>
 	<!-- 电子邮件发送 -->
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-	  <property name="host" value="${mail.host}" />  
-        <property name="username" value="${mail.username}" />  
-        <property name="password" value="${mail.password}" />  
-        <property name="defaultEncoding" value="${mail.encoding}"></property>  
-        <property name="javaMailProperties">  
-            <props>  
-                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>  
-                <prop key="mail.smtp.timeout">${mail.smtp.timeout}</prop>  
-            </props>  
-        </property>  
-	</bean>
 	<!-- mybatis 配置 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" scope="singleton">
 		<property name="dataSource" ref="dataSource"></property>
-		<property name="configLocation"
-			value="classpath:com/sane/dh/configs/mybatis-config.xml"></property>
+		<property name="mapperLocations">
+			<list>
+				<value>classpath*:com/sane/dh/dao/**/*.xml</value>
+			</list>
+		</property>
+
+	</bean>
+	<bean name="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!--basePackage指定要扫描的包，在此包之下的映射器都会被搜索到。可指定多个包，包与包之间用逗号或分号分隔 -->
+		<property name="basePackage" value="com.sane.dh.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
 	<!-- 事务管理器 -->
 	<bean id="txManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
+	<!--密码加密-->
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"></bean>
+	<!-- 注解实物管理-->
+	<tx:annotation-driven transaction-manager="txManager"></tx:annotation-driven>
 	<!-- 声明式事务管理 -->
-	<tx:advice id="txAdvice" transaction-manager="txManager">
-		<tx:attributes>
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="get*" read-only="true" />
-			<tx:method name="*" propagation="REQUIRED" />
-		</tx:attributes>
-	</tx:advice>
-	<aop:config>
-		<aop:pointcut expression="execution(* com.sane.dh.service.impl.*.*(..))"
-			id="pointcut" />
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut" />
-	</aop:config>
+<!--	<tx:advice id="txAdvice" transaction-manager="txManager">-->
+<!--		<tx:attributes>-->
+<!--			<tx:method name="save*" propagation="REQUIRED" />-->
+<!--			<tx:method name="delete*" propagation="REQUIRED" />-->
+<!--			<tx:method name="get*" read-only="true" />-->
+<!--			<tx:method name="*" propagation="REQUIRED" />-->
+<!--		</tx:attributes>-->
+<!--	</tx:advice>-->
+
 </beans>

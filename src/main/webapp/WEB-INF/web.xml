@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/javaee"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_4.xsd"
-	version="2.4">
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0.1">
 	<display-name>WebDesign</display-name>
 	<!-- configure the springIOC -->
 	<listener>
@@ -10,19 +10,39 @@
 	</listener>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:com/sane/dh/configs/springconfig.xml</param-value>
+		<param-value>classpath:configs/springconfig.xml</param-value>
 	</context-param>
 	<servlet>
 		<servlet-name>spring-mvc</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>classpath:com/sane/dh/configs/springmvc.xml</param-value>
+			<param-value>classpath:configs/springmvc.xml</param-value>
 		</init-param>
+<!--		<multipart-config>-->
+			<!--该路径必须是一个已经存在的路劲-->
+<!--			<location>/Users/lixiuli/Documents/upload_temp</location>-->
+			<!--单个文件（单个part）最大限度 单位字节-->
+<!--			<max-file-size>102</max-file-size>-->
+			<!--整个请求最大限度（包括所有文件或者其他part） 单位字节-->
+<!--			<max-request-size>105</max-request-size>-->
+<!--			设置文件缓存的临界点,超过则先保存到临时目录-->
+<!--			<file-size-threshold>2</file-size-threshold>-->
+<!--		</multipart-config>-->
+		
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>spring-mvc</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+<!--启用SpringSecurity-->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 </web-app>

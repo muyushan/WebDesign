@@ -14,7 +14,7 @@
 <script src="<s:url value="/static_resources/js/regist.js" />" type="text/javascript" ></script>
 </head>
 <body>
-<h1>我认为你应该给我更加了解你的机会, <c:out value="${userInfo.email_phone}"></c:out></h1>
+<h1>我认为你应该给我更加了解你的机会, <c:out value="${userInfo.username}"></c:out></h1>
 <form method="post">
 
 </form>

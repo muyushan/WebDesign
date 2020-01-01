@@ -9,6 +9,13 @@
 <title>WebDesign--设计师的充电站</title>
 </head>
 <body>
-欢迎回来
+上传头像
+<form action="upload.do" method="post" enctype="multipart/form-data">
+    请选择头像:<input type="file" name="image"/>
+    <input type="text" name="age">
+    <textarea name="cont" cols="10" rows="10"></textarea>
+    <textarea name="cont2" cols="10" rows="10"></textarea>
+    <input type="submit"></input>
+</form>
 </body>
 </html>

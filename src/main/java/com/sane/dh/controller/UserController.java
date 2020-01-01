@@ -1,5 +1,6 @@
 package com.sane.dh.controller;
 
+import com.sane.dh.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sane.dh.model.user.UserRegistInfo;
 import com.sane.dh.service.UserService;
 
 @Controller
@@ -26,7 +26,7 @@ public class UserController {
 
 	@RequestMapping(value = { "/regist" }, method = RequestMethod.POST)
 	@ResponseBody
-	public String processRegist(@RequestBody UserRegistInfo registInfo) {
+	public String processRegist(@RequestBody User registInfo) {
 		if (userService.saveNewUser(registInfo)) {
 			return "success";
 		} else {
@@ -41,7 +41,7 @@ public class UserController {
 	@RequestMapping(value="/{email_phone}/validate")
 	@ResponseBody
 	public String validateEmail_PhoneIsNew(@PathVariable String email_phone) {
-		Boolean isRegisted=userService.phone_emailIsRegisted(email_phone);
+		Boolean isRegisted=userService.userNameIsRegisted(email_phone);
 		return isRegisted.toString(); 
 	}
 
@@ -54,7 +54,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/{email_phone}" }, method = RequestMethod.GET)
 	public String showProfile(@PathVariable(value = "email_phone") String email_phone, Model model) {
-		UserRegistInfo userRegistInfo = userService.getUserInfo(email_phone);
+		User userRegistInfo = userService.getUserInfo(email_phone);
 		model.addAttribute("userInfo", userRegistInfo);
 		return "userProfile";
 	}
