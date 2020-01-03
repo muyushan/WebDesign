@@ -9,6 +9,6 @@
 <title>WebDesign--设计师的充电站</title>
 </head>
 <body>
-欢迎回来
+欢迎回来  <a href="logout">注销登录</a>
 </body>
 </html>
